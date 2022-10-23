@@ -1,0 +1,431 @@
+{% load static %}
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocodak Delivery Food</title>
+
+   
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <!-- aos css cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- google fonts cdn link  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'homepage/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
+    
+</head>
+
+<body>
+
+<!-- header section start-->
+<header class="header">
+
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="logo">
+                <a href="#"><img src="{% static 'picture/logo2.png' %}" alt="logo"></a>
+            </div>
+
+            <nav class="nav-bar">
+                <a class="active" href="#home">home</a>
+                <a href="#about">about</a>
+                <a href="#our-menu">our menu</a>
+                <a href="#services">service</a>
+                <a href="#contact">contact us</a>
+                <a href="/order">order</a>
+
+            </nav>
+
+            <div class="icons">
+                <div  class="fas fa-bars" id="menu-btn"></div>
+                <div  class="fas fa-search" id="search-btn"></div>
+                <div  class="fas fa-shopping-cart" id="cart-btn"></div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'favorite' %}"><div  class="fas fa-heart" id="heart-btn"></div></a>
+                {% endif %}
+                <div  class="fas fa-user-circle" id="login-btn"></div>
+                
+            </div>
+
+             <button type="button" class="nav-toggler">
+                <span></span>
+                    
+             </button>
+           
+            <nav class="nav">
+                <ul>
+                   <li class="nav-item"><a href="#home">home</a></li>
+                   <li class="nav-item"><a href="#about">about</a></li>
+                   <li class="nav-item"><a href="#our-menu">our menu</a></li>
+                   <li class="nav-item"><a href="#testimonials">testimonials</a></li>
+                   <li class="nav-item"><a href="#contact">contact us</a></li>
+                   <li class="nav-item"><a href="#order">order</a></li>
+                </ul>
+                
+            </nav>
+            
+           
+        </div>
+
+        <div class="shopping-cart" >
+            {% if user.is_authenticated %}
+            {% for item in cartitem %}
+                <div class="box" id="cartid{{ item.item.id }}">
+                <i class="fas fa-trash" onclick="deletecart({{ item.item.id }})"></i>
+                <img src="{{ item.item.picture.url }}" alt=""/>
+                <div class="content">
+                    <h3>{{ item.item.title }}</h3>
+                    <span class="price">${{ item.item.price }}</span>
+                    <span class="quantity">/-quantity : {{ item.quantity }}</span>
+                </div>
+                </div>
+            {% endfor %}
+            {% else %}
+            {% for key, value in cartitem.items %}
+                <div class="box" id="cartid{{ key }}">
+                <i class="fas fa-trash" onclick="deletecart({{ key }})"></i>
+                <img src="/Picture/{{ value.picture }}" alt="">
+                <div class="content">
+                    <h3>{{ value.title }}</h3>
+                    <span class="price">${{ value.price }}</span>
+                    <span class="quantity">/-quantity : {{ value.quantity }}</span>
+                </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="total" id="shopping">Total: ${{ total }}</div>
+            <a href="/order" class="btn btn-default">check out</a>
+
+        </div>
+        <form action="" class="login-form">
+            <h3>Welcome to Cocodak</h3>
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="btn btn-default">Profile</a>
+            <a href="{% url 'logout' %}" class="btn btn-default">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-default">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-default">Register</a>
+            {% endif %}
+
+        </form>
+
+        
+       
+
+    </div>
+
+
+</header>
+
+    
+<!-- header section end-->
+
+
+<!-- search form-->
+
+<form action="{% url 'search' %}" method="get" id="search-form">
+    <input type="text" placeholder="Search here...." name="q" value="{{ q }}" id="search-box">
+    <button type="submit" class="btn-search"><i class="fa fa-search"></i></button>
+    <i class="fas fa-times" id="close"></i>
+</form>
+
+<!--  home section start-->
+
+
+<section class="home-section" id="home">›
+    <div class="home-bg"></div>
+    <div class="container">
+        <div class="row min-vh-100 align-items-center">
+            <div class="home-text">
+                <h1>Cocodak Food</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                <a href="#our-menu" class="btn btn-default">our menu</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--  home section end-->
+
+<!-- about section start-->
+<section class="about-section sec-padding" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="section-title">
+                <h2 data-title="our story">about us</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="about-text">
+                <h3>Some Word About Us</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+                <a href="#our-menu" class="btn btn-default">Check our menu</a>
+            </div>
+            <div class="about-img">
+                <div class="img-box">
+                    <h3>20+ years experience</h3>
+                    <img src="{% static 'picture/about-section.jpg' %}" alt="about img">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!--  about section end-->
+<!--  menu section start-->
+
+
+<section class="menu-section" id="our-menu">
+    <div class="container">
+        <div class="row">
+            <div class="section-title">
+                <h2 data-title="order now">our menu</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="menu-tabs">
+                {% for item in object_category %}
+                    {% if item.id == 1 %}
+                        <button type="button" class="menu-tab-item active" data-target="#{{ item.slug }}">{{ item.title }}</button>
+                    {% else %}
+                        <button type="button" class="menu-tab-item" data-target="#{{ item.slug }}">{{ item.title }}</button>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+
+        {% for item1 in object_category %}
+        {% if item1.id == 1 %}
+            <div class="row menu-tab-content active" id = "{{ item1.slug }}">
+        {% else %}
+            <div class="row menu-tab-content" id = "{{ item1.slug }}">
+        {% endif %}
+            {% for item2 in object_product %}
+            {% if item2.category.id == item1.id %}
+            <div class="menu-item">
+                <div class="menu-item-title">
+                    {% if user.is_authenticated %}
+                                <button class="heart-btn" id="sp{{ item2.id }}" onclick="favorite({{ item2.id }})" style="color: grey;
+                                 {% for fav in favorite%}
+                                    {% if fav.product_id == item2 %}
+                                        color: red;
+                                    {% endif %}
+                                 {% endfor %}
+                            "><i class="fas fa-heart"></i></button>
+
+                    {% endif %}
+                    <a href="/dishdetail/{{ item2.id }}"><img src="{{ item2.picture.url }}"></a>
+                    <h3>{{ item2.title }}</h3>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <h3 class="price">${{ item2.price }}</h3>
+                    <a href="{% url 'order' %}" class="btn btn-default" onclick="addCart({{ item2.id }},'{{ item2.title }}','{{ item2.price }}','{{ item2.picture.url }}')">Order now</a>
+                    <button class="btn btn-default" onclick="addCart({{ item2.id }},'{{ item2.title }}','{{ item2.price }}','{{ item2.picture.url }}')">Add to cart</button>
+                </div>
+            </div>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        </div>
+        
+        
+    </div>
+
+</section>
+
+<section class="services" id="services">
+    <div class="container">
+        <div class="row">
+            <div class="section-title">
+                <h2 data-title="services">We provide best food serivces</h2>
+            </div>
+        </div>
+    <div class="container">
+        <div class="row">
+            <div class="services-item">
+                <img src="{% static 'homepage/img/order-a-burger-online-3554517-2989150.webp' %}">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+            <div class="services-item">
+                <img src="{% static 'homepage/img/shipping.png' %}">
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+            <div class="services-item">
+                <img src="{% static 'homepage/img/delivery.png' %}">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</section>
+
+<!--  menu section end-->
+<!--  footer section end-->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="footer-item">
+                    <h3>our location</h3>
+                    <p>14/6/8 Phạm Ngọc Thạch, Phường Vĩnh Thanh,<br> Thành Phố Rạch Giá, Kiên Giang</p>
+                </div>
+                <div class="footer-item">
+                    <h3>opening hours</h3>
+                    <p>Monday to Sunday <br> 9:00 AM - 10:00 PM</p>
+                </div>
+                <div class="footer-item">
+                    <h3>contact us</h3>
+                    <p>0917 699 498</p>
+                    <p>trangiahao040101@gmail.com</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </footer>
+
+
+
+<!--  footer section end-->
+
+
+    <script src="https://kit.fontawesome.com/e6521ddb5c.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script src="{% static 'homepage/script.js' %}"></script>
+
+
+    <script>
+    function addCart(id, title, price, picture){
+        qty = $("#quantity").val();
+        if (!qty) {
+            qty = 1;
+        }
+        $.post('/addcart/', {'id':id, 'qty':qty, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+        {
+            let cart = "cartid" + id;
+            let cartitem = document.getElementById(cart);
+            console.log(cartitem);
+            if (cartitem != null){
+                let item = document.getElementById('cartid'+id),
+                    qty = item.querySelector(".quantity"),
+                    price_update = Number(item.querySelector(".price").textContent.slice(1)),
+                    total = document.getElementById("shopping");
+                let qty_update = Number(qty.textContent.slice(13));
+                    qty_update = qty_update + 1;
+                    let total_update = total.textContent.slice(8);
+                    let total_update_1 = Number(total_update) + price_update;
+                    total_update = Math.round(total_update_1 * 1000)/1000;
+                qty.innerText = "/-quantity : " + qty_update;
+                total.innerText = "Total: $" + total_update;
+
+            }
+            else {
+                let html = `<div class="box" id="cartid` + id +`">
+                <i class="fas fa-trash" onclick="deletecart(`+id+`)"></i>
+                <img src="`+picture+`" alt="">
+                <div class="content">
+                    <h3>`+title+`</h3>
+                    <span class="price">$`+price+`</span>
+                    <span class="quantity">/-quantity : 1</span>
+                </div>
+                </div>`;
+                let total = document.getElementById('shopping'),
+                    total_update = (Number(total.textContent.slice(8)) + Number(price));
+                    total_update = Math.round(total_update * 1000)/1000;
+                    total.insertAdjacentHTML('beforebegin', html);
+                    total.innerText = "Total: $" + total_update;
+
+            }
+        });
+    }
+    function search(){
+        search_food = $("#search-box").val();
+        if (search_food !== '') {
+            $.post('/search/', {'search':search_food, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+        {
+            alert("thành công")
+        });
+        }
+    }
+    function deletecart(id){
+        $.post('/deletecart_index/', {'id':id,'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+        {
+            let cart = "cartid" + id,
+                item = document.getElementById(cart);
+            let total = document.getElementById('shopping'),
+                qty = Number(item.querySelector(".quantity").textContent.slice(13)),
+                price_update = Number(item.querySelector(".price").textContent.slice(1));
+                console.log(price_update, qty);
+                let x = Math.round(qty * price_update * 1000)/1000;
+                console.log(x);
+                let total_update = Number(total.textContent.slice(8)) - x;
+                total_update = Math.round(total_update * 1000)/1000;
+                    total.innerText = "Total: $" + total_update;
+            document.getElementById(cart).remove();
+        });
+    }
+    function favorite(id){
+        const t = "sp" + id;
+        let btnvar1 = document.getElementById(t);
+        if(btnvar1.style.color ==="red"){
+            let status = 0;
+            $.post('/favorite_status/', {'id':id, 'status':status, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                btnvar1.style.color = "grey"
+            });
+        }
+        else{
+            let status = 1;
+            $.post('/favorite_status/', {'id':id, 'status':status, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                btnvar1.style.color = "red"
+            });
+
+        }
+    }
+    function ordernow(id){
+        $.post('/addorder/', {'id':id, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+
+            });
+    }
+    </script>
+</body>
+
+</html>
