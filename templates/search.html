@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cocodak Delivery Food</title>
 
-   
+
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
     <!-- aos css cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="{% static 'homepage/css/style.css' %}">
 
 
-    
+
 </head>
 
 <body>
@@ -83,7 +83,7 @@
             {% if user.is_authenticated %}
             {% for item in cartitem %}
                 <div class="box" id="cartid{{ item.item.id }}">
-                <i class="fas fa-trash" onclick="deletecart({{ item.item.id }})"></i>
+                <i class="fas fa-trash" onclick="deletecart(`${item.item.id}`)"></i>
                 <img src="{{ item.item.picture.url }}" alt=""/>
                 <div class="content">
                     <h3>{{ item.item.title }}</h3>
@@ -95,7 +95,7 @@
             {% else %}
             {% for key, value in cartitem.items %}
                 <div class="box" id="cartid{{ key }}">
-                <i class="fas fa-trash" onclick="deletecart({{ key }})"></i>
+                <i class="fas fa-trash" onclick="deletecart(` ${key} `)"></i>
                 <img src="/Picture/{{ value.picture }}" alt="">
                 <div class="content">
                     <h3>{{ value.title }}</h3>
@@ -129,7 +129,7 @@
 
 
 </header>
-    
+
     <section class="menu-section" id="our-menu">
         <div class="container">
             <div class="row">
@@ -151,7 +151,7 @@
                     </table>
                 </form>
             </div>
-    
+
             <div class="row menu-tab-content active" id = "chicken">
                 {% for item in search %}
                 <div class="menu-item">
@@ -175,25 +175,25 @@
                         <i class="fas fa-star"></i>
                         <h3 class="price">${{ item.price }}</h3>
                         <a href="checkout.html" class="btn btn-default">Order now</a>
-                        <button class="btn btn-default" onclick="addCart({{ item2.id }},'{{ item2.title }}','{{ item2.price }}','{{ item2.picture.url }}')">Add to cart</button>
+                        <button class="btn btn-default" onclick="addCart(` ${item2.id} `,'{{ item2.title }}','{{ item2.price }}','{{ item2.picture.url }}')">Add to cart</button>
                     </div>
                 </div>
                 {% endfor %}
 
             </div>
-           
-           
-            
-            
-    
+
+
+
+
+
         </div>
-    
-    
+
+
     </section>
 
 
     <footer class="footer" id="contact">
-    
+
         <div class="container">
             <div class="row">
                 <div class="footer-item">
@@ -225,7 +225,7 @@
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 
     <script>
- 
+
         function favorite(id){
         const t = "sp" + id;
         let btnvar1 = document.getElementById(t);
