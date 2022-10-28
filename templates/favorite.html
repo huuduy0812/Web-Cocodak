@@ -83,7 +83,7 @@
             {% if user.is_authenticated %}
             {% for item in cartitem %}
                 <div class="box" id="cartid{{ item.id }}">
-                <i class="fas fa-trash" onclick="deletecart({{ item.id }})"></i>
+                <i class="fas fa-trash" onclick="deletecart(`${item.id}`)"></i>
                 <img src="{{ item.item.picture.url }}" alt=""/>
                 <div class="content">
                     <h3>{{ item.item.title }}</h3>
@@ -95,7 +95,7 @@
             {% else %}
             {% for key, value in cartitem.items %}
                 <div class="box" id="cartid{{ key }}">
-                <i class="fas fa-trash" onclick="deletecart({{ key }})"></i>
+                <i class="fas fa-trash" onclick="deletecart(`${key}`)"></i>
                 <img src="/Picture/{{ value.picture }}" alt="">
                 <div class="content">
                     <h3>{{ value.title }}</h3>
@@ -148,7 +148,7 @@
            <div class="title">
                <h1>My Wishlist</h1>
            </div>
-           
+
 
            <div class="product-item">
             <table>
@@ -170,7 +170,7 @@
                     </td>
                     <td style="text-align: center">
                         <div class="buttons" id="y{{  item.product_id.id }}">
-                            <button class="btn btn-default" onclick="addCart({{ item.product_id.id }},'{{ item.product_id.title }}',
+                            <button class="btn btn-default" onclick="addCart({{ item.product_id.id }}'{{ item.product_id.title }}',
                                     '{{ item.product_id.price }}','{{ item.product_id.picture }}')">Add to cart</button>
                             <button class="btn btn-default" onclick="deletefavorite({{ item.id }})">Remove</button>
                         </div>
@@ -180,19 +180,19 @@
             </table>
 
            </div>
-           
+
 
             <br>
 
-        
+
 
         </div>
     </section>
 
-    
- 
 
-    
+
+
+
     <footer class="footer">
         <div class="container">
             <div class="row">
