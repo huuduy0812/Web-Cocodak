@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cocodak Delivery Food</title>
 
-   
+
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
     <!-- aos css cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
 
-    
+
 </head>
 
 <body>
@@ -85,7 +85,7 @@
             {% if user.is_authenticated %}
             {% for item in cartitem %}
                 <div class="box">
-                <i class="fas fa-trash" onclick="deletecart({{ item.id }})"></i>
+                <i class="fas fa-trash" onclick="deletecart(`${item.id}`)"></i>
                 <img src="{{ item.item.picture.url }}" alt=""/>
                 <div class="content">
                     <h3>{{ item.item.title }}</h3>
@@ -97,7 +97,7 @@
             {% else %}
             {% for key, value in cartitem.items %}
                 <div class="box">
-                <i class="fas fa-trash" onclick="deletecart({{ key }})"></i>
+                <i class="fas fa-trash" onclick="deletecart(`${key}`)"></i>
                 <img src="/Picture/{{ value.picture }}" alt="">
                 <div class="content">
                     <h3>{{ value.title }}</h3>
@@ -174,9 +174,9 @@
                             </div>
                         </div>
                         <div class="qty-button" id="sp{{ item.id }}">
-                            <span class="minus" onclick="sub({{ item.id }})"> - </span>
+                            <span class="minus" onclick="sub(`${item.id}`)"> - </span>
                             <span class="num"> {{ item.quantity }} </span>
-                            <span class="plus" onclick="add({{ item.id }})"> + </span>
+                            <span class="plus" onclick="add(`${item.id}`)"> + </span>
                         </div>
                         <div class="price" id="price{{ item.id }}">
                             <div class="current_price">Price: ${{ item.total }}</div>
@@ -184,7 +184,7 @@
                     </div>
                 </div>
                 <div class="product_btns">
-                    <div class="remove" onclick="deletecart({{ item.id }})">REMOVE</div>
+                    <div class="remove" onclick="deletecart(`${item.id}`)">REMOVE</div>
                     <div class="whishlist">MOVE TO WHISHLIST</div>
                 </div>
 
@@ -208,9 +208,9 @@
                             </div>
                         </div>
                         <div class="qty-button" id="sp{{ key }}">
-                            <span class="minus" onclick="sub({{ key }})"> - </span>
+                            <span class="minus" onclick="sub(`${key}`)"> - </span>
                             <span class="num"> {{ value.quantity }} </span>
-                            <span class="plus" onclick="add({{ key }})"> + </span>
+                            <span class="plus" onclick="add(`${key}`)"> + </span>
                         </div>
                         <div class="price" >
                             <div class="current_price" id="price{{ key }}">Price: ${{ value.price|mul:value.quantity }}</div>
@@ -218,7 +218,7 @@
                     </div>
                 </div>
                 <div class="product_btns">
-                    <div class="remove" onclick="deletecart({{ key }})">REMOVE</div>
+                    <div class="remove" onclick="deletecart(`${key}`)">REMOVE</div>
                     <div class="whishlist">MOVE TO WHISHLIST</div>
                 </div>
 
