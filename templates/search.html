@@ -1,0 +1,307 @@
+{% load static %}
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocodak Delivery Food</title>
+
+       <link rel="shortcut icon" href="{% static 'picture/logoDemo.png' %}" type="image/x-icon" />
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <!-- aos css cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- google fonts cdn link  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'homepage/css/search.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/style1.css' %}">
+
+
+    
+</head>
+
+<body>
+
+<header class="header" style="box-shadow: var(--shadow)">
+
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="logo">
+                <a href="{% url 'index' %}#home"><img src="{% static 'picture/logoDemo.png' %}" alt="logo"></a>
+            </div>
+
+            <nav class="nav-bar">
+                <a class="active" href="#home">home</a>
+                <a href="{% url 'index' %}#about">about</a>
+                <a href="{% url 'index' %}#our-menu">our menu</a>
+                <a href="{% url 'index' %}#services">service</a>
+                <a href="{% url 'index' %}#contact">contact us</a>
+                <a href="/order">order</a>
+
+            </nav>
+
+            <div class="icons">
+                <div  class="fas fa-bars" id="menu-btn"></div>
+                <div  class="fas fa-search" id="search-btn"></div>
+                <div  class="fas fa-shopping-cart" id="cart-btn"></div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'favorite' %}"><div  class="fas fa-heart" id="heart-btn"></div></a>
+                {% endif %}
+                <div  class="fas fa-user-circle" id="login-btn"></div>
+
+            </div>
+
+             <button type="button" class="nav-toggler">
+                <span></span>
+
+             </button>
+
+            <nav class="nav">
+                <ul>
+                   <li class="nav-item"><a href="#home">home</a></li>
+                   <li class="nav-item"><a href="#about">about</a></li>
+                   <li class="nav-item"><a href="#our-menu">our menu</a></li>
+                   <li class="nav-item"><a href="#testimonials">testimonials</a></li>
+                   <li class="nav-item"><a href="#contact">contact us</a></li>
+                   <li class="nav-item"><a href="#order">order</a></li>
+                </ul>
+
+            </nav>
+
+
+        </div>
+
+        <div class="shopping-cart" >
+            {% if user.is_authenticated %}
+            {% for item in cartitem %}
+                <div class="box" id="cartid{{ item.item.id }}">
+                <i class="fas fa-trash" onclick="deletecart({{ item.item.id }})"></i>
+                <img src="{{ item.item.picture.url }}" alt=""/>
+                <div class="content">
+                    <h3>{{ item.item.title }}</h3>
+                    <span class="price">${{ item.item.price }}</span>
+                    <span class="quantity">/-quantity : {{ item.quantity }}</span>
+                </div>
+                </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="total" id="shopping">Total: ${{ total }}</div>
+            <a href="/order" class="btn btn-default">check out</a>
+
+        </div>
+        <form action="" class="login-form">
+            <h3>Welcome to Cocodak</h3>
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="btn btn-default">Profile</a>
+            <a href="{% url 'logout' %}" class="btn btn-default">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-default">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-default">Register</a>
+            {% endif %}
+
+        </form>
+
+
+
+
+    </div>
+
+
+</header>
+<!-- search form-->
+
+
+    
+    <section class="menu-section" id="our-menu">
+        <div class="container">
+            <div class="row">
+                <div class="section-title">
+                    <h2>What are you looking for ?</h2>
+                </div>
+            </div>
+{#            <div class="boxcontainer">#}
+{#                <form action="{% url 'search' %}" method="get" id="search-form">#}
+{#                    <table class="element">#}
+{#                        <tr>#}
+{#                            <td>#}
+{#                                <input type="text" placeholder="Search" name="q" value="{{ q }}" class="search">#}
+{#                            </td>#}
+{#                            <td>#}
+{#                                <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                    </table>#}
+{#                </form>#}
+{#            </div>#}
+    
+            <div class="row menu-tab-content active" id = "chicken">
+                {% for item in search %}
+                <div class="menu-item">
+                    <div class="menu-item-title">
+                        {% if user.is_authenticated %}
+                                <button class="heart-btn" id="sp{{ item.id }}" onclick="favorite({{ item.id }})" style="color: #f1d5ba;
+                                 {% for fav in favorite%}
+                                    {% if fav.product_id == item %}
+                                        color: red;
+                                    {% endif %}
+                                 {% endfor %}
+                            "><i class="fas fa-heart"></i></button>
+
+                    {% endif %}
+                        <a href="dishdetail.html"><img src="{{ item.picture.url }}"></a>
+                        <h3>{{ item.title }}</h3>
+
+                         <div class="star-widget">
+                    <div class="star">
+{#                        <i class="fas fa-star"></i>#}
+{#                        <i class="fas fa-star"></i>#}
+{#                        <i class="fas fa-star"></i>#}
+{#                        <i class="fas fa-star"></i>#}
+{#                        <i class="fas fa-star"></i>#}
+                        <input type="radio" name="rate" id="rate-5">
+                        <label for="rate-5" class="fas fa-star"></label>
+                        <input type="radio" name="rate" id="rate-4">
+                        <label for="rate-4" class="fas fa-star"></label>
+                        <input type="radio" name="rate" id="rate-3">
+                        <label for="rate-3" class="fas fa-star"></label>
+                        <input type="radio" name="rate" id="rate-2">
+                        <label for="rate-2" class="fas fa-star"></label>
+                        <input type="radio" name="rate" id="rate-1">
+                        <label for="rate-1" class="fas fa-star"></label>
+
+
+
+
+                        <div class="clear"></div>
+
+                    </div>
+                </div>
+                        <h3 class="price">${{ item.price }}</h3>
+                        <a href="checkout.html" class="btn btn-default re-btn1">Order now</a>
+                        <button class="btn btn-default re-btn" onclick="addCart({{ item2.id }},'{{ item2.title }}','{{ item2.price }}','{{ item2.picture.url }}')">Add to cart</button>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+           
+           
+            
+            
+    
+        </div>
+    
+    
+    </section>
+
+
+    <footer class="footer" id="contact">
+    
+        <div class="container">
+            <div class="row">
+                <div class="footer-item">
+                    <h3>Address</h3>
+                    <p>14/6/8 Nguyễn Trung Trực<br> Thành Phố Rạch Giá, Kiên Giang</p>
+                </div>
+                <div class="footer-item">
+                    <h3>opening hours</h3>
+                    <p>Monday to Sunday <br> 9:00 AM - 10:00 PM</p>
+                </div>
+                <div class="footer-item">
+                    <h3>Reservation</h3>
+                    <p>0917 699 498</p>
+                    <p>trangiahao040101@gmail.com</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+    <script src="https://kit.fontawesome.com/e6521ddb5c.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+    <script>
+ 
+        function favorite(id){
+        const t = "sp" + id;
+        let btnvar1 = document.getElementById(t);
+        if(btnvar1.style.color ==="#eaa023"){
+            let status = 0;
+            $.post('/favorite_status/', {'id':id, 'status':status, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                btnvar1.style.color = "#f1d5ba"
+            });
+        }
+        else{
+            let status = 1;
+            $.post('/favorite_status/', {'id':id, 'status':status, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                btnvar1.style.color = "#eaa023"
+            });
+
+        }
+        }
+        function addCart(id, title, price, picture){
+        qty = $("#quantity").val();
+        if (!qty) {
+            qty = 1;
+        }
+        $.post('/addcart/', {'id':id, 'qty':qty, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+        {
+            let cart = "cartid" + id;
+            let cartitem = document.getElementById(cart);
+            console.log(cartitem);
+            if (cartitem != null){
+                let item = document.getElementById('cartid'+id),
+                    qty = item.querySelector(".quantity"),
+                    price_update = Number(item.querySelector(".price").textContent.slice(1)),
+                    total = document.getElementById("shopping");
+                let qty_update = Number(qty.textContent.slice(13));
+                    qty_update = qty_update + 1;
+                    let total_update = total.textContent.slice(8);
+                    let total_update_1 = Number(total_update) + price_update;
+                    total_update = Math.round(total_update_1 * 1000)/1000;
+                qty.innerText = "/-quantity : " + qty_update;
+                total.innerText = "Total: $" + total_update;
+
+            }
+            else {
+                let html = `<div class="box" id="cartid` + id +`">
+                <i class="fas fa-trash" onclick="deletecart(`+id+`)"></i>
+                <img src="`+picture+`" alt="">
+                <div class="content">
+                    <h3>`+title+`</h3>
+                    <span class="price">$`+price+`</span>
+                    <span class="quantity">/-quantity : 1</span>
+                </div>
+                </div>`;
+                let total = document.getElementById('shopping'),
+                    total_update = (Number(total.textContent.slice(8)) + Number(price));
+                    total_update = Math.round(total_update * 1000)/1000;
+                    total.insertAdjacentHTML('beforebegin', html);
+                    total.innerText = "Total: $" + total_update;
+
+            }
+        });
+    }
+     </script>
+
+
+</body>

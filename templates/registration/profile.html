@@ -1,0 +1,348 @@
+{% extends 'Base/Header.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block section %}
+    <style>
+    /* Import Font Dancing Script */
+        @import url(https://fonts.googleapis.com/css?family=Dancing+Script);
+
+        * {
+            margin: 0;
+        }
+
+        body {
+            background-color: white;
+            font-family: Arial;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .clear{
+            clear: both;
+        }
+
+        /* NavbarTop */
+        .navbar-top {
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0px 4px 8px 0px grey;
+            height: 70px;
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            padding-top: 15px;
+            position: absolute;
+            left: 45%;
+        }
+
+        .navbar-top ul {
+            float: right;
+            list-style-type: none;
+            margin: 0;
+            overflow: hidden;
+            padding: 18px 50px 0 40px;
+        }
+
+        .navbar-top ul li {
+            float: left;
+        }
+
+        .navbar-top ul li a {
+            color: #333;
+            padding: 14px 16px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .icon-count {
+            background-color: #ff0000;
+            color: #fff;
+            float: right;
+            font-size: 11px;
+            left: -25px;
+            padding: 2px;
+            position: relative;
+        }
+        .main-profile{
+            width: 100%;
+        }
+
+        /* End */
+
+        /* Sidenav */
+        .sidenav {
+            background-color: #f7f0e1;
+            color: black;
+            border-bottom-right-radius: 25px;
+            padding-top: 50px;
+            float: left;
+            height: 100vh;
+            width: 30%;
+        }
+
+        .profile {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            box-shadow: 0px 0px 5px 1px grey;
+        }
+        .profile_card{
+            background-color: #f7f0e1;
+            padding: 15px;
+            border-radius: 10px;
+
+        }
+        .profile_card .item{
+            display: flex;
+            justify-content: space-between;
+        }
+        .profile_card .item p{
+            color: black;
+        }
+        .input-info{
+            width: 400px;
+            padding: 4px;
+            margin: 5px;
+        }
+
+        .name {
+            color: black;
+            font-size: 20px;
+            font-weight: bold;
+            padding-top: 20px;
+        }
+        .name h4,
+        .name p{
+            font-weight: bold;
+            color: black;
+            text-align: center;
+        }
+
+        .sidenav-url{
+            text-align: left;
+            margin: 10px 100px;
+            display: flex;
+            flex-direction: column;
+        }
+        .url-home,
+        .url-order,
+        .url-mycart,
+        .url-favourite{
+            margin-bottom: 10px;
+            border-radius: 0.5rem;
+            padding: 15px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            text-align: center;
+            background-color: var(--main-color);
+            text-transform: capitalize;
+            cursor: pointer;
+        }
+
+        .url i {
+            color: #ffffff;
+            width: 20px;
+            height: 20px;
+            font-size:20px;
+            margin-right: 1rem;
+        }
+        .url a {
+            color: #ffffff;
+            font-size: 18px;
+            {#padding: 6px 8px;#}
+            text-decoration: none;
+            text-align: right;
+
+        }
+
+        .url a:hover, .url .active {
+
+            {#color: #000;#}
+            {#margin-left: 20%;#}
+            {#width: 65%;#}
+        }
+
+        /* End */
+
+        /* Main */
+        .main {
+
+            font-size: 28px;
+            padding: 5rem 10rem;
+            width: 60%;
+            float: left;
+        }
+
+        .main h2 {
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .main .card {
+            background-color: #f7f0e1;
+            border-radius: 18px;
+            box-shadow: 1px 1px 8px 0 grey;
+            height: auto;
+            margin-bottom: 10rem;
+            padding: 20px 0 20px 50px;
+        }
+
+        .main .card table {
+            border: none;
+            font-size: 16px;
+            height: 270px;
+            width: 60%;
+        }
+
+        .edit {
+            position: absolute;
+            color: #e7e7e8;
+            right: 14%;
+        }
+
+        td {
+            color:black !important;
+        }
+
+        /* End */
+    </style>
+
+    <!-- Sidenav -->
+    <div class="main-profile">
+        <div class="sidenav">
+            <div class="profile">
+    {#            <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="" width="100" height="100">#}
+                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                <div class="name">
+                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                    <p>{{ user.email }}</p>
+                </div>
+
+            </div>
+
+            <div class="sidenav-url">
+                <div class="url">
+                    <div class="url-home" onclick="window.location='{% url 'index' %}'" >
+                        <i class="fas fa-home"></i>
+                        <a>Home</a>
+                    </div>
+                   <div class="url-order" onclick="window.location='{% url 'orderdetail' %}'">
+                       <i class="fas fa-file-invoice"></i>
+                       <a class="active">Order history</a>
+
+                   </div>
+                     <div class="url-mycart" onclick="window.location='{% url 'order' %}'">
+                       <i class="fas fa-shopping-cart"></i>
+                       <a class="active">My Cart</a>
+
+                   </div>
+
+                     <div class="url-favourite" onclick="window.location='{% url 'favorite' %}'">
+                         <i class="fas fa-heart"></i>
+                        <a class="active">My Wishlist</a>
+
+                   </div>
+				   
+				   <div class="url-favourite" onclick="window.location='{% url 'change_password' %}'">
+                         <i class="fas fa-key"></i>
+                        <a class="active">Change Password</a>
+
+                   </div>
+                </div>
+            </div>
+        </div>
+    <!-- End -->
+
+    <!-- Main -->
+        <div class="main">
+            <h2>PROFILE</h2>
+            <div class="card">
+                <div class="card-body">
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Name</td>
+                                <td>:</td>
+                                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td>:</td>
+                                {% if user.gender == 1 %}
+                                    <td>Male</td>
+                                {% elif user.gender == 2 %}
+                                    <td>Female</td>
+                                {% else %}
+                                    <td>Other</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                        <tr>
+                                <td>Phone</td>
+                                <td>:</td>
+                                <td>{{ user.phone }}</td>
+                            </tr>
+                        <tr>
+                                <td>Address</td>
+                                <td>:</td>
+                                <td>{{ user.address }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+{#            <div class="profile_card">#}
+{#                <div class="item" id="total">#}
+{#                    <p>Fullname:</p>#}
+{#                        <input type="text" id="name" value="{{ user.first_name }} {{ user.last_name }}" class="input-info"/>#}
+{#                    </p>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                    <p>Gender:</p>#}
+{#                    <p>#}
+{#                        <input type="text" id="gender" value=" {% if user.gender == 1 %}}#}
+{#{                                   <td>Male</td>}#}
+{#{                                {% elif user.gender == 2 %}}#}
+{#{                                    <td>Female</td>}#}
+{#{                                {% else %}}#}
+{#                                 <td>Other</td>}#}
+{#                                {% endif %}}" class="input-info"/>#}
+{##}
+{#                    </p>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                    <p>Email:</p>#}
+{#                    <p>#}
+{#                        <input type="text" id="email" value="" class="input-info"/>#}
+{#                    </p>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                    <p>Phone:</p>#}
+{#                    <p>#}
+{#                        <input type="text" id="phone" value="" class="input-info"/>#}
+{#                    </p>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                    <p>Address:</p>#}
+{#                    <p>#}
+{#                        <input type="text" id="address" value="" class="input-info"/>#}
+{#                    </p>#}
+{#                </div>#}
+{#            </div>#}
+        </div>
+        <div class="clear"></div>
+    </div>
+    <!-- End -->
+{% endblock %}
+

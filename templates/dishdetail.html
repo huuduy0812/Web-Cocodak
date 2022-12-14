@@ -1,0 +1,308 @@
+{% load static %}
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocodak Delivery Food</title>
+
+
+    <link rel="shortcut icon" href="{% static 'picture/logoDemo.png' %}" type="image/x-icon" />
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <!-- aos css cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- google fonts cdn link  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <!-- font awesome cdn link  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- custom css file link  -->
+
+    <link rel="stylesheet" href="{% static 'homepage/css/dishdetail3.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/style1.css' %}">
+
+
+{#    <link rel="stylesheet" href="{% static 'homepage/css/style2.css' %}">#}
+    <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
+
+    
+</head>
+
+<body>
+<!-- header section start-->
+<header class="header">
+
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="logo">
+                <a href="{% url 'index' %}#home"><img src="{% static 'picture/logoDemo.png' %}" alt="logo"></a>
+            </div>
+
+            <nav class="nav-bar">
+                <a href="#home">home</a>
+                <a href="#about">about</a>
+                <a href="#our-menu">our menu</a>
+                <a href="#services">service</a>
+                <a href="#contact">contact us</a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}" onclick="alert('You need to log in to continue !')">order</a>
+                {% else %}
+                    <a href="/order">order</a>
+                {% endif %}
+
+            </nav>
+
+            <div class="icons">
+                <div  class="fas fa-bars" id="menu-btn"></div>
+                <div  class="fas fa-search" id="search-btn"></div>
+               {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}" onclick="Login()"><div  class="fas fa-shopping-cart" id="cart-btn"></div></a>
+                {% else %}
+                    <div  class="fas fa-shopping-cart" id="cart-btn"></div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'favorite' %}"><div  class="fas fa-heart" id="heart-btn"></div></a>
+                {% endif %}
+                <div  class="fas fa-user-circle" id="login-btn"></div>
+
+            </div>
+
+             <button type="button" class="nav-toggler">
+                <span></span>
+
+             </button>
+
+            <nav class="nav">
+                <ul>
+                   <li class="nav-item"><a href="#home">home</a></li>
+                   <li class="nav-item"><a href="#about">about</a></li>
+                   <li class="nav-item"><a href="#our-menu">our menu</a></li>
+                   <li class="nav-item"><a href="#testimonials">testimonials</a></li>
+                   <li class="nav-item"><a href="#contact">contact us</a></li>
+                   <li class="nav-item"><a href="#order">order</a></li>
+                </ul>
+
+            </nav>
+
+
+        </div>
+
+       {% if user.is_authenticated %}
+        <div class="shopping-cart" >
+            {% for item in cartitem %}
+                <div class="box" id="cartid{{ item.item.id }}">
+                <i class="fas fa-trash" onclick="deletecart({{ item.item.id }})"></i>
+                <img src="{{ item.item.picture.url }}" alt=""/>
+                <div class="content">
+                    <h3>{{ item.item.title }}</h3>
+                    <span class="price">${{ item.item.price }}</span>
+                    <span class="quantity">/-quantity : {{ item.quantity }}</span>
+                </div>
+                </div>
+            {% endfor %}
+
+            <div class="total" id="shopping">Total: ${{ total }}</div>
+            <a href="/order" class="btn btn-default re-btn">check out</a>
+        {% endif %}
+
+        </div>
+        <form action="" class="login-form">
+            <h3>Welcome to Cocodak</h3>
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="btn btn-default re-btn">Profile</a>
+            <a href="{% url 'logout' %}" class="btn btn-default re-btn1">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-default re-btn1">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-default re-btn1">Register</a>
+            {% endif %}
+
+        </form>
+
+
+
+
+    </div>
+
+
+</header>
+
+
+<!-- header section end-->
+
+
+<!-- search form-->
+
+<form action="{% url 'search' %}" method="get" id="search-form">
+    <input type="text" placeholder="Search here...." name="q" value="{{ q }}" id="search-box">
+    <button type="submit" class="btn-search"><i class="fa fa-search"></i></button>
+    <i class="fas fa-times" id="close"></i>
+</form>
+
+    <div class="container-product">
+        <div class="card">
+            <div class="images">
+                <div class="slider"><img src="{{ product.picture.url }}"></div>
+                <div class="img-slider">
+                    <div class="imgs"></div>
+                    <div class="imgs"></div>
+                    <div class="imgs"></div>
+
+                </div>
+            </div>
+            <div class="infos">
+                {% if user.is_authenticated %}
+                <div class="info-heart">
+                    <i class="fa-solid fa-heart" id="sp" onclick="favorite({{ product.id }})" style="
+                    {% for fav in favorite%}
+                                    {% if fav.product_id == product %}
+                                        color:#eaa023;
+                                    {% endif %}
+                                 {% endfor %}
+                    "></i>
+                </div>
+                {% endif %}
+                <h1>{{ product.title }}</h1>
+                <div class="reviews">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price">
+                    <h3>${{ product.price }}</h3>
+                </div>
+                <div class="more-infos">
+                    <h5>Description</h5>
+                    
+                </div>
+                <div class="info-content">
+                    <p>{{ product.description }}</p>
+                </div>
+                <div class="qty-button">
+                    <span class="minus"> - </span>
+                    <span class="num"> 01 </span>
+                    <span class="plus"> + </span>
+                </div>
+                <div class="buttons">
+                    {% if user.is_authenticated %}
+                   <button class="btn btn-default re-btn" onclick="addCart({{ product.id }},'{{ product.title }}','{{ product.price }}','{{ product.picture.url }}')">Add to cart</button>
+                   <a style="text-align: center" href="{% url 'order' %}" class="btn btn-default re-btn1" onclick="ordernow({{ product.id }})">Order now</a>
+                    {% else %}
+                        <button class="btn btn-default re-btn" onclick="Login()">Add to cart</button>
+                       <a style="text-align: center" href="{% url 'login' %}" class="btn btn-default re-btn1" onclick="alert('You need to log in to continue !')">Order now</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    {% include 'process/data.html' %}
+    <script>
+    function addCart(id) {
+        qty = $("#quantity").val();
+        if (!qty) {
+            qty = 1;
+        }
+        $.post('/addcart/', {'id':id, 'qty':qty, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+        {
+            let cart = "cartid" + id;
+            let cartitem = document.getElementById(cart);
+            console.log(cartitem);
+            if (cartitem != null){
+                let item = document.getElementById('cartid'+id),
+                    qty = item.querySelector(".quantity"),
+                    price_update = Number(item.querySelector(".price").textContent.slice(1)),
+                    total = document.getElementById("shopping");
+                let qty_update = Number(qty.textContent.slice(13));
+                    qty_update = qty_update + 1;
+                    let total_update = total.textContent.slice(8);
+                    let total_update_1 = Number(total_update) + price_update;
+                    total_update = Math.round(total_update_1 * 1000)/1000;
+                qty.innerText = "/-quantity : " + qty_update;
+                total.innerText = "Total: $" + total_update;
+
+            }
+            else {
+                let html = `<div class="box" id="cartid` + id +`">
+                <i class="fas fa-trash" onclick="deletecart(`+id+`)"></i>
+                <img src="`+picture+`" alt="">
+                <div class="content">
+                    <h3>`+title+`</h3>
+                    <span class="price">$`+price+`</span>
+                    <span class="quantity">/-quantity : 1</span>
+                </div>
+                </div>`;
+                let total = document.getElementById('shopping'),
+                    total_update = (Number(total.textContent.slice(8)) + Number(price));
+                    total_update = Math.round(total_update * 1000)/1000;
+                    total.insertAdjacentHTML('beforebegin', html);
+                    total.innerText = "Total: $" + total_update;
+
+            }
+        });
+    }
+    </script>
+    <script>
+        const plus = document.querySelector(".plus"),
+        minus = document.querySelector(".minus"),
+        num = document.querySelector(".num");
+
+        let a = 1 ;
+        plus.addEventListener("click" , () => {
+            a++;
+            a = (a < 10) ? "0" + a : a;
+            num.innerText = a;
+            console.log(a);
+        });
+
+        minus.addEventListener("click" , () => {
+           if(a > 1){
+               a--;
+               a = (a < 10) ? "0" + a : a;
+                num.innerText = a;
+           }
+        });
+
+        function favorite(id){
+        //const t = "sp" + id;
+        let btnvar1 = document.getElementById("sp")
+        console.log(btnvar1);
+        if(btnvar1.style.color === "rgb(234, 160, 35)"){
+            let status = 0;
+            $.post('/favorite_status/', {'id':id, 'status':status, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                btnvar1.style.color = "#f1d5ba"
+            });
+        }
+        else{
+            let status = 1;
+            $.post('/favorite_status/', {'id':id, 'status':status, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                btnvar1.style.color = "#eaa023"
+            });
+
+        }
+    }
+    function Login(){
+        alert("You need to log in to continue !");
+        window.location = "{% url 'login' %}";
+    }
+    function ordernow(id){
+        let num = document.querySelector(".num");
+        let qty = parseInt(num.innerText)
+        $.post('/ordernow_process/', {'id':id, 'qty':qty , 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+                window.location = "{% url 'ordernow' %}";
+            });
+    }
+
+    </script>
+</body>
+</html>

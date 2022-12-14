@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link rel="shortcut icon" href="{% static 'picture/logoDemo.png' %}" type="image/x-icon" />
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <!-- aos css cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- google fonts cdn link  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:wght@100;300;400;500&display=swap"
+          rel="stylesheet">
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'homepage/css/registration1.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
+
+
+</head>
+<body style="background: white">
+
+
+<!----->
+<div class="container" style="background: #f7f0e1;box-shadow: var(--shadow)">
+    <div class="title" style="color: black">Login</div>
+        {% if messages %}
+        <p style="color: #FF0000">{{ messages.success }}</p>
+        {% endif %}
+        {% if rf != '' %}
+            <p style="color: #FF0000">{{ rf }}</p>
+        {% endif %}
+
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="user-details">
+
+                <div class="input-box">
+                    <span class="details" style="color: black">Username</span>
+                    <input type="text" name="username" placeholder="Enter your username"  required>
+                </div>
+
+                <div class="input-box">
+                    <span class="details" style="color: black">Passsword</span>
+                    <input type="password" name="password" placeholder="Enter your password"  required>
+                </div>
+                    <a href="{% url 'forgotPassword' %}" style="color: black">Forgot password ?</a>
+                </div>
+
+        <div class="button" style="margin-bottom: 2rem;">
+            <input type="submit" value="Login">
+        </div>
+        <p class="regisBtn">Do you have not a account ? Please click <a href="{% url 'register' %}">here</a> to register</p>
+    </form>
+</div>
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,62 @@
+
+
+{% extends 'Base/Header.html' %}
+
+{% block title %}Order History{% endblock %}
+
+{% block section %}
+
+    <section class="home-section" id="home">
+       <div class="small-container cart-page">
+           <div class="title">
+               <h1>Order History</h1>
+           </div>
+
+
+           <div class="product-item">
+            <table>
+                <tr>
+                    <th style="text-align: center;">Order ID</th>
+                    <th style="text-align: center;">Total</th>
+                    <th style="text-align: center;">Status</th>
+                </tr>
+
+
+                {% for item in order%}
+
+                <tr>
+                    <td style="text-align: center">
+                        #order_{{ item.id }}
+                    </td>
+                    <td style="text-align: center">
+                        ${{ item.total_all }}
+                    </td>
+                    <td style="text-align: center">
+                        {% if item.status == 1 %}
+                            Processing
+                        {% elif item.status == 2 %}
+                            Delivery in processing
+                        {% elif item.status == 3 %}
+                            Completed
+                        {% elif item.status == 4 %}
+                            Canceled
+                        {% endif %}
+                    </td>
+                 </tr>
+                {% endfor %}
+
+
+            </table>
+
+           </div>
+
+
+            <br>
+
+
+
+        </div>
+    </section>
+
+{% endblock %}
+

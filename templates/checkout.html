@@ -1,0 +1,234 @@
+<style>
+    @use postcss-preset-env {
+  stage: 0;
+}
+
+:root {
+  --color-background: #272727;
+  --color-primary: #eaa023;
+  --font-family-base: Poppin, sans-serif;
+  --font-size-h1: 1.25rem;
+  --font-size-h2: 1rem;
+}
+
+
+* {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-background);
+  display: grid;
+  font-family: var(--font-family-base);
+  line-height: 1.5;
+  margin: 0;
+  min-block-size: 100vh;
+  padding: 5vmin;
+  place-items: center;
+}
+
+address {
+  font-style: normal;
+}
+
+button {
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  line-height: 1.2;
+  margin-block: 0 1.5em;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  line-height: 1.2;
+  margin-block: 0 0.5em;
+}
+
+legend {
+  font-weight: 600;
+  margin-block-end: 0.5em;
+  padding: 0;
+}
+
+input {
+  border: 0;
+  color: inherit;
+  font: inherit;
+}
+
+input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+tbody {
+  color: #b4b4b4;
+}
+
+td {
+  padding-block: 0.125em;
+}
+
+tfoot {
+  border-top: 1px solid #b4b4b4;
+  font-weight: 600;
+}
+
+    .card {
+  border-radius: 1em;
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 1em;
+}
+
+.form {
+  display: grid;
+  gap: 2em;
+}
+
+.form__radio label {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 1em;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  padding-block: 0.5em;
+  padding-inline: 1em;
+}
+
+
+.iphone {
+  background-color: #fbf6f7;
+  border-radius: 2em;
+  block-size: 812px;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
+  inline-size: 375px;
+  overflow: auto;
+  padding: 2em;
+}
+.myTable td {
+    color: white !important;
+}
+</style>
+<div class="iphone">
+  <header class="header">
+    <h1>Checkout</h1>
+  </header>
+
+  <form action="https://httpbin.org/post" class="form" method="POST">
+    <div>
+      <h2>Information</h2>
+
+      <div class="card">
+          <table class="myTable">
+              <tr>
+                  <td>Fullname:</td>
+                  <td>{{ order.name }}</td>
+              </tr>
+               <tr>
+                  <td>Phone:</td>
+                  <td>{{ order.phone }}</td>
+               </tr>
+               <tr>
+                  <td>Address:</td>
+                  <td style="word-break:break-word;">
+                     {{ order.shipping_address }}
+                  </td>
+               </tr>
+          </table>
+      </div>
+    </div>
+
+    <div>
+      <h2>Shopping Bill</h2>
+
+      <table>
+        <tbody>
+          <tr>
+            <td>Shipping fee</td>
+            <td align="right">$5.00</td>
+          </tr>
+          <tr>
+            <td>VAT 10%</td>
+            <td align="right">-10%</td>
+          </tr>
+          <tr>
+            <td>Price Total</td>
+            <td align="right">${{ order.total }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td align="right">${{ order.total_all }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div>
+        <div id="paypal-button-container"></div>
+    </div>
+  </form>
+</div>
+<!-- Include the PayPal JavaScript SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AeemB75PtaZ8eaiWQ5EIMrvkxjuvf9yKDNWztvf97emWtlRGz8sce2AI9bPpuDdmBLosg12PzhBLYxDy&currency=USD"></script>
+
+    <script>
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '{{ order.total_all }}'
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+                    alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                    window.location.href="{% url 'index' %}"
+                    // Replace the above to show a success message within this page, e.g.
+                    // const element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>

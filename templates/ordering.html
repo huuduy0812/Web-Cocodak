@@ -1,0 +1,439 @@
+{% load static %}
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocodak Delivery Food</title>
+
+       <link rel="shortcut icon" href="{% static 'picture/logoDemo.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <!-- aos css cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- google fonts cdn link  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+    <!-- custom css file link  -->
+
+    <link rel="stylesheet" href="{% static 'homepage/css/style1.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/shoppingcart.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
+
+    
+</head>
+
+<body>
+
+
+<header class="header">
+
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="logo">
+                <a href="{% url 'index' %}#home"><img src="{% static 'picture/logoDemo.png' %}" alt="logo"></a>
+            </div>
+
+            <nav class="nav-bar">
+                <a href="{% url 'index' %}#home">home</a>
+                <a href="{% url 'index' %}#about">about</a>
+                <a href="{% url 'index' %}#our-menu">our menu</a>
+                <a href="{% url 'index' %}#services">service</a>
+                <a href="{% url 'index' %}#contact">contact us</a>
+                <a class="active" href="/order">order</a>
+
+            </nav>
+
+            <div class="icons">
+                <div  class="fas fa-bars" id="menu-btn"></div>
+                <div  class="fas fa-search" id="search-btn"></div>
+                <div  class="fas fa-shopping-cart" id="cart-btn"></div>
+                {% if user.is_authenticated %}
+                    <div  class="fas fa-heart" id="heart-btn"></div>
+                {% endif %}
+                <div  class="fas fa-user-circle" id="login-btn"></div>
+
+            </div>
+
+             <button type="button" class="nav-toggler">
+                <span></span>
+
+             </button>
+
+            <nav class="nav">
+                <ul>
+                   <li class="nav-item"><a href="#home">home</a></li>
+                   <li class="nav-item"><a href="#about">about</a></li>
+                   <li class="nav-item"><a href="#our-menu">our menu</a></li>
+                   <li class="nav-item"><a href="#testimonials">testimonials</a></li>
+                   <li class="nav-item"><a href="#contact">contact us</a></li>
+                   <li class="nav-item"><a href="#order">order</a></li>
+                </ul>
+
+            </nav>
+
+
+        </div>
+
+        <div class="shopping-cart">
+            {% if user.is_authenticated %}
+            {% for item in cartitem %}
+                <div class="box">
+                <i class="fas fa-trash" onclick="deletecart({{ item.id }})"></i>
+                <img src="{{ item.item.picture.url }}" alt=""/>
+                <div class="content">
+                    <h3>{{ item.item.title }}</h3>
+                    <span class="price">${{ item.item.price|mul:item.quantity }}</span>
+                    <span class="quantity">/-quantity : {{ item.quantity }}</span>
+                </div>
+                </div>
+            {% endfor %}
+            {% else %}
+            {% for key, value in cartitem.items %}
+                <div class="box">
+                <i class="fas fa-trash" onclick="deletecart({{ key }})"></i>
+                <img src="/Picture/{{ value.picture }}" alt="">
+                <div class="content">
+                    <h3>{{ value.title }}</h3>
+                    <span class="price">${{ value.price|mul:value.quantity }}</span>
+                    <span class="quantity">/-quantity : {{ value.quantity }}</span>
+                </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="total">Total: {{ total }}$</div>
+            <a href="/order" class="btn btn-default">check out</a>
+
+        </div>
+        <form action="" class="login-form">
+            <h3>Welcome to Cocodak</h3>
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="btn btn-default">Profile</a>
+            <a href="{% url 'logout' %}" class="btn btn-default">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-default">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-default">Register</a>
+            {% endif %}
+
+        </form>
+
+
+
+
+    </div>
+
+
+</header>
+
+
+<!-- header section end-->
+
+
+<!-- search form-->
+
+<form action="{% url 'search' %}" method="get" id="search-form">
+    <input type="text" placeholder="Search here...." name="q" value="{{ q }}" id="search-box">
+    <input type="submit"  class="button fa-search">
+    <i class="fas fa-times" id="close"></i>
+</form>
+
+<!-- cart -->
+    <div class="wrapper">
+        <div class="wrapper_content">
+            <div class="header_title">
+                <div class="title">
+                    MY SHOPPING CART :
+                </div>
+                <div class="amount" id="count">
+                    <b>( {{ count }} ) ITEMS</b>
+                </div>
+
+            </div>
+
+            {% for item in cartitem %}
+            <div class="product_wrap" id="product{{ item.id }}">
+                <div class="product_info">
+                    <div class="product_img">
+                        <img src="{{ item.item.picture.url }}" alt="ProductImage">
+                    </div>
+                    <div class="product_data">
+                        <div class="description">
+                            <div class="main_header">
+                                {{item.item.title}}
+                            </div>
+                            <div class="sub_header">
+                              {{ item.item.description }}
+                            </div>
+                        </div>
+                        <div class="qty-button" id="sp{{ item.id }}">
+                            <span class="minus" onclick="sub({{ item.id }})"> - </span>
+                            <span class="num"> {{ item.quantity }} </span>
+                            <span class="plus" onclick="add({{ item.id }})"> + </span>
+                        </div>
+                        <div class="price" id="price{{ item.id }}">
+                            <div class="current_price">Price: ${{ item.total }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product_btns">
+                    <div class="remove" onclick="deletecart({{ item.id }})">REMOVE</div>
+                    <div class="whishlist" onclick="favorite({{ item.item.id }})">MOVE TO WHISHLIST</div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+
+
+            <div class="slider">
+                <div class="bg_shadow"></div>
+                <div class="select_quantity">
+                    <div class="header">
+                        <div class="slider_title">Select Quantity</div>
+                        <div class="close">X</div>
+                    </div>
+                    <div class="body">
+                        <ul>
+                            <li class="active">1</li>
+                            <li>2</li>
+                            <li>3</li>
+                            <li>4</li>
+                            <li>5</li>
+                            <li>6</li>
+                            <li>7</li>
+                            <li>8</li>
+                            <li>9</li>
+                            <li>10</li>
+                        </ul>
+                    </div>
+                    <div class="footer">
+                        <div class="button">DONE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper_amount">
+            <div class="header_title">
+                <div class="title">
+                    INFORMATION
+                </div>
+                <div class="amount">
+                    <b></b>
+                </div>
+            </div>
+            <div class="price_details">
+                <div class="item" id="total">
+                    <p>Fullname:</p>
+                    <p>
+                        <input type="text" id="name" value="" class="input-info"/>
+                    </p>
+                </div>
+                <div class="item">
+                    <p>Phone:</p>
+                    <p>
+                        <input type="text" id="phone" value="" class="input-info"/>
+                    </p>
+                </div>
+                <div class="item">
+                    <p>Address:</p>
+                    <p>
+                        <input type="text" id="address" value="" class="input-info"/>
+                    </p>
+                </div>
+            </div>
+            <div class="header_title">
+                <div class="title">
+                    TOTAL PRICE DETAILS:
+                </div>
+                <div class="amount">
+                    <b></b>
+                </div>
+            </div>
+            <div class="price_details">
+                <div class="item" id="total1">
+                    <p>Order Total :</p>
+                    <p>${{ total }}</p>
+                </div>
+                <div class="item">
+                    <p>Delivery Charges :</p>
+                    <p>$ {{ ship }}</p>
+                </div>
+                <div class="item">
+                    <p> VAT :</p>
+                    <p>10%</p>
+                </div>
+                <div class="total" id="total_all">
+                    <p>Total :</p>
+                    <p>$ {{ total_all }}</p>
+                </div>
+            </div>
+            <div class="checkout" >
+                <a href="{% url 'checkout' %}" role="button" class="checkout_btn" onclick="order()">Place Order</a>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/e6521ddb5c.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script>
+
+        let count_set = {{ count }};
+        function order(){
+            let name = $("#name").val(),
+            phone = $("#phone").val(),
+            address = $("#address").val();
+            console.log(name, phone, address)
+            $.post('/checkout_process/', {'name':name, 'phone':phone, 'address': address,'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data) {
+
+            });
+        }
+
+        function deletecart(id){
+        $.post('/deletecart/', {'id':id,'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+        {
+            let product = "product" + id;
+            let count = document.getElementById('count');
+            count_set--;
+            count.children[0].innerText = '( '+ count_set +' ) ITEMS'
+
+             let t = "sp" + id;
+            let btn = document.getElementById(t);
+            let plus = btn.querySelector(".plus"),
+                minus = btn.querySelector(".minus"),
+                num = btn.querySelector(".num");
+            let price = document.getElementById("price" + id),
+            price_product = price.children[0].innerText.slice(8);
+            let total = document.getElementById("total1"),
+                x = Number(total.children[1].innerText.slice(1));
+            let total_all = document.getElementById("total_all"),
+                y = Number(total_all.children[1].innerText.slice(1));
+
+            x = Math.round( (x-price_product) * 1000)/1000;
+
+            y = Math.round( ((x + 5) * 1.1) * 1000)/1000;
+
+            total.children[1].innerText = '$' + x
+            if (x === 0)
+                {
+                    total_all.children[1].innerText = '$0'
+                }
+                else
+                {
+                    total_all.children[1].innerText = '$' + y
+                }
+
+
+            document.getElementById(product).remove();
+        });
+    }
+        function add(id) {
+            let t = "sp" + id;
+            let btn = document.getElementById(t);
+            let plus = btn.querySelector(".plus"),
+                minus = btn.querySelector(".minus"),
+                num = btn.querySelector(".num");
+            let price = document.getElementById("price" + id),
+            price_product = price.children[0].innerText.slice(8);
+            let total = document.getElementById("total1"),
+                x = Number(total.children[1].innerText.slice(1));
+            let total_all = document.getElementById("total_all"),
+                y = Number(total_all.children[1].innerText.slice(1));
+            console.log(price_product, x)
+            let a = num.textContent;
+            x -= price_product;
+            price_product = price_product / a;
+            a++;
+            num.innerText = a;
+            price_product = Math.round( price_product * a * 1000)/1000;
+            x = Math.round( (x + price_product) * 1000)/1000;
+            y = Math.round( ((x + 5) * 1.1) * 1000)/1000;
+            price.innerHTML = `<div class="current_price">Price: $${price_product}</div>`;
+            total.children[1].innerText = '$' + x
+            total_all.children[1].innerText = '$' + y
+            $.post('/quantity_cart/', {
+                    'id': id,
+                    'qty': a,
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                }, function (data) {
+
+                });
+            }
+        function sub(id) {
+            let t = "sp" + id;
+            let btn = document.getElementById(t);
+            let plus = btn.querySelector(".plus"),
+                minus = btn.querySelector(".minus"),
+                num = btn.querySelector(".num");
+            let price = document.getElementById("price" + id),
+            price_product = price.children[0].innerText.slice(8);
+            let total = document.getElementById("total1"),
+                x = Number(total.children[1].innerText.slice(1));
+            let total_all = document.getElementById("total_all"),
+                y = Number(total_all.children[1].innerText.slice(1));
+            let a = num.textContent;
+            price_product = price_product / a;
+            if (a > 1){
+                a--;
+                x = Math.round( (x-price_product) * 1000)/1000;
+                price_product = Math.round( price_product * a * 1000)/1000;
+
+                y = Math.round( ((x + 5) * 1.1) * 1000)/1000;
+                total.children[1].innerText = '$' + x
+                total_all.children[1].innerText = '$' + y
+                price.innerHTML = `<div class="current_price">Price: $${price_product}</div>`;
+                num.innerText = a;
+                console.log(a);
+                $.post('/quantity_cart/', {
+                    'id': id,
+                    'qty': a,
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                }, function (data) {
+
+                });
+            }
+            else {
+                a--;
+                x = Math.round( (x-price_product) * 1000)/1000;
+                price_product = Math.round( price_product * a * 1000)/1000;
+
+                y = Math.round( ((x + 5) * 1.1) * 1000)/1000;
+                total.children[1].innerText = '$' + x
+                if (x === 0)
+                {
+                    total_all.children[1].innerText = '$0'
+                }
+                else
+                {
+                    total_all.children[1].innerText = '$' + y
+                }
+                price.innerHTML = `<div class="current_price">Price: $${price_product}</div>`;
+                num.innerText = a;
+                let product = "product" + id;
+                let count = document.getElementById('count');
+                count_set--;
+                count.children[0].innerText = '( '+ count_set +' ) ITEMS'
+                document.getElementById(product).remove();
+            }
+        }
+        function favorite(id){
+            $.post('/favorite_add_check/', {'id':id, 'csrfmiddlewaretoken':'{{csrf_token}}' }, function(data)
+            {
+
+            });
+
+        }
+
+
+     </script>
+    <script src="{% static 'homepage/script.js' %}"></script>
+
+</body>

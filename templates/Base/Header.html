@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="{% static 'picture/logoDemo.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <!-- aos css cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- google fonts cdn link  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'homepage/css/cart1.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'homepage/css/style3.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/all.css' %}">
+
+    
+</head>
+
+<body>
+    <header class="header">
+
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="logo">
+                <a href="{% url 'index' %}#home"><img src="{% static 'picture/logoDemo.png' %}" alt="logo"></a>
+                </div>
+    
+                <nav class="nav-bar">
+                    <a href="{% url 'index' %}">home</a>
+                    <a href="{% url 'index' %}#about">about</a>
+                    <a href="{% url 'index' %}#our-menu">our menu</a>
+                    <a href="{% url 'index' %}#contact">contact us</a>
+                    <a href="{% url 'order' %}">order</a>
+    
+                </nav>
+
+                <div class="icons">
+                    <div  class="fas fa-bars" id="menu-btn"></div>
+                    <div  class="fas fa-shopping-cart" id="cart-btn"></div>
+                    <div  class="fas fa-heart" id="heart-btn"></div>
+                    <div  class="fas fa-user-circle" id="login-btn"></div>
+                    
+                </div>
+    
+                <button type="button" class="nav-toggler">
+                    <span></span>
+                        
+                </button>
+    
+                 <nav class="nav">
+                    <ul>
+                       <li class="nav-item"><a href="#home">home</a></li>
+                       <li class="nav-item"><a href="#about">about</a></li>
+                       <li class="nav-item"><a href="#our-menu">our menu</a></li>
+                       <li class="nav-item"><a href="#testimonials">testimonials</a></li>
+                       <li class="nav-item"><a href="#contact">contact us</a></li>
+                       <li class="nav-item"><a href="#order">order</a></li>
+                    </ul>
+                    
+                </nav>
+            </div>
+            
+            
+            
+
+
+        </div>
+        
+    </header>
+
+    {% block section %} {% endblock %}
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-item">
+                    <h3>our location</h3>
+                    <p>14/6/8 Phạm Ngọc Thạch, Phường Vĩnh Thanh,<br> Thành Phố Rạch Giá, Kiên Giang</p>
+                </div>
+                <div class="footer-item">
+                    <h3>opening hours</h3>
+                    <p>Monday to Sunday <br> 9:00 AM - 10:00 PM</p>
+                </div>
+                <div class="footer-item">
+                    <h3>contact us</h3>
+                    <p>0917 699 498</p>
+                    <p>trangiahao040101@gmail.com</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://kit.fontawesome.com/e6521ddb5c.js" crossorigin="anonymous"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src=""{% static 'homepage/script.js' %}"></script>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+
+</body>
+
+</html>
